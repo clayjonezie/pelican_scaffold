@@ -1,0 +1,46 @@
+#!/usr/bin/python
+
+from __future__ import print_function
+import os, sys
+from datetime import datetime
+
+AUTHOR = "Clay"
+
+if not os.path.isdir("content"):
+   print("couldn't find content dir")
+   sys.exit(1)
+
+content_dir = "content"
+
+if not len(sys.argv) == 3:
+   print("{} title category".format(sys.argv[0]))
+   sys.exit(2)
+
+title = sys.argv[1]
+category = sys.argv[2]
+
+now = datetime.now()
+date = now.strftime("%d %B %Y")
+time = now.strftime("%I:%M")
+
+if title == 'today':
+   title = date
+
+slug = title.lower().replace(" ", "-")
+
+category_dir = os.path.join(content_dir, category)
+category_is_dir = os.path.isdir(category_dir)
+
+if category_is_dir:
+   outputfile = os.path.join(content_dir, category, slug) + ".md"
+else:
+   outputfile = os.path.join(content_dir, slug) + ".md"
+
+output = open(outputfile, 'w')
+output.write("Title: " + title + "\n")
+output.write("Date: " + now.strftime("%Y-%m-%d ") + time + "\n")
+output.write("Slug: " + slug + "\n")
+output.write("Author: " + AUTHOR + "\n\n\n")
+output.close()
+
+os.system("vim " + outputfile + " +6")
